@@ -30,16 +30,12 @@
       margin-bottom: 5px;
       font-weight: bold;
     }
-    input[type="text"], input[type="date"], select, textarea {
+    input[type="text"], select, textarea {
       width: 100%;
       padding: 8px;
       border: 1px solid #ccc;
       border-radius: 4px;
       box-sizing: border-box;
-    }
-    .product-title {
-      margin-top: 10px;
-      line-height: 1.6;
     }
     .image-container {
       display: flex;
@@ -57,30 +53,13 @@
     .image-box img {
       max-width: 100%;
       height: auto;
+      display: none;
     }
     .data-stats {
       display: flex;
       justify-content: space-around;
       margin: 20px 0;
       font-size: 16px;
-    }
-    .chart-container {
-      margin: 20px 0;
-      border: 1px solid #ddd;
-      padding: 10px;
-      overflow-x: auto;
-    }
-    .footer {
-      text-align: right;
-      font-size: 12px;
-      color: #777;
-      margin-top: 30px;
-    }
-    .controls {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      margin-top: 10px;
     }
     button {
       background-color: #3498db;
@@ -91,23 +70,21 @@
       cursor: pointer;
       margin-top: 10px;
     }
-    button.secondary {
-      background-color: #2ecc71;
-    }
     button:hover {
-      opacity: 0.95;
+      background-color: #2980b9;
     }
-
-    /* Print styles */
-    @media print {
-      body { background: white; color: black; }
-      .container { box-shadow: none; border-radius: 0; padding: 0; max-width: 100%; margin: 0; }
-      .controls, input[type="file"], input[type="text"], select, textarea, label, button { display: none !important; }
-      /* Ensure the result area is visible and fills page */
-      #result { display: block !important; }
-      img { page-break-inside: avoid; max-width: 100% !important; height: auto !important; }
-      .footer { display: block; text-align: right; }
-      @page { size: A4; margin: 15mm; }
+    #result {
+      display: none;
+      margin-top: 30px;
+      padding: 20px;
+      border: 1px solid #ddd;
+      background: #fff;
+    }
+    .footer {
+      text-align: right;
+      margin-top: 20px;
+      color: #777;
+      font-size: 14px;
     }
   </style>
 </head>
@@ -115,21 +92,21 @@
   <div class="container">
     <h1>电商实训成果展示</h1>
 
-    <!-- 基本信息 -->
+    <!-- 表单区域 -->
     <div class="form-group">
-      <label for="name">姓名：</label>
-      <input type="text" id="name" placeholder="请输入姓名" value="王洋洋" />
+      <label>姓名：</label>
+      <input type="text" id="name" placeholder="请输入姓名" />
     </div>
     <div class="form-group">
-      <label for="class">班级：</label>
-      <input type="text" id="class" placeholder="请输入班级" value="电商 2204" />
+      <label>班级：</label>
+      <input type="text" id="class" placeholder="请输入班级" />
     </div>
     <div class="form-group">
-      <label for="duration">实训时长：</label>
-      <input type="text" id="duration" placeholder="例如：2023.9.1——至今" value="2023.9.1——至今" />
+      <label>实训时长：</label>
+      <input type="text" id="duration" placeholder="例如：2023.9.1——至今" />
     </div>
     <div class="form-group">
-      <label for="platform">平台：</label>
+      <label>平台：</label>
       <select id="platform">
         <option value="Shopee">Shopee</option>
         <option value="Lazada">Lazada</option>
@@ -137,177 +114,122 @@
       </select>
     </div>
     <div class="form-group">
-      <label for="site">站点：</label>
-      <input type="text" id="site" placeholder="例如：菲律宾站点" value="菲律宾站点" />
+      <label>站点：</label>
+      <input type="text" id="site" placeholder="例如：菲律宾站点" />
     </div>
     <div class="form-group">
-      <label for="category">品类：</label>
-      <input type="text" id="category" placeholder="例如：男装" value="男装" />
+      <label>品类：</label>
+      <input type="text" id="category" placeholder="例如：男装" />
     </div>
-
-    <!-- 上架数量 -->
     <div class="form-group">
-      <label for="productCount">上架产品数量：</label>
-      <input type="text" id="productCount" placeholder="例如：997" value="997" />
+      <label>上架产品数量：</label>
+      <input type="text" id="productCount" placeholder="例如：997" />
     </div>
-
-    <!-- 产品标题 -->
     <div class="form-group">
-      <label for="productTitle">上架产品标题展示：</label>
-      <textarea id="productTitle" rows="3" placeholder="输入产品标题，例如：ZSN Zun Shang Niao Japanese Retro Drawstring..." >ZSN Zun Shang Niao Japanese Retro Drawstring Three-dimensional High Street American Style Leggings For Men</textarea>
+      <label>上架产品标题展示：</label>
+      <textarea id="productTitle" rows="3" placeholder="输入产品标题..."></textarea>
     </div>
 
-    <!-- 优秀产品展示 -->
     <div class="form-group">
-      <label>优秀架上产品展示：</label>
-      <div class="image-container" id="productImages">
+      <label>优秀架上产品展示（最多3张）：</label>
+      <div class="image-container">
         <div class="image-box">
-          <img src="" alt="产品图1" style="display:none;" id="img1" />
-          <input type="file" accept="image/*" onchange="previewImage(this, 'img1')" />
+          <img id="img1" />
+          <input type="file" accept="image/*" onchange="previewImage(event, 'img1')" />
         </div>
         <div class="image-box">
-          <img src="" alt="产品图2" style="display:none;" id="img2" />
-          <input type="file" accept="image/*" onchange="previewImage(this, 'img2')" />
+          <img id="img2" />
+          <input type="file" accept="image/*" onchange="previewImage(event, 'img2')" />
         </div>
         <div class="image-box">
-          <img src="" alt="产品图3" style="display:none;" id="img3" />
-          <input type="file" accept="image/*" onchange="previewImage(this, 'img3')" />
+          <img id="img3" />
+          <input type="file" accept="image/*" onchange="previewImage(event, 'img3')" />
         </div>
       </div>
     </div>
 
-    <!-- 店铺数据统计 -->
-    <h2>店铺实训期间数据统计：</h2>
-    <div class="data-stats">
-      <div>
-        <p>浏览量</p>
-        <p id="views">65927</p>
-      </div>
-      <div>
-        <p>点击数</p>
-        <p id="clicks">7736</p>
-      </div>
-      <div>
-        <p>访客数</p>
-        <p id="visitors">20926</p>
-      </div>
-    </div>
-
-    <!-- 近7天数据图表 -->
-    <h2>店铺近7天数据展示：</h2>
-    <div class="chart-container">
-      <img id="chartImage" src="https://via.placeholder.com/800x400?text=数据图表示例" alt="近7天数据图表" />
-    </div>
-
-    <!-- 海报上传 -->
     <div class="form-group">
       <label>海报展示：</label>
-      <input type="file" accept="image/*" id="posterFile" onchange="previewPoster(this)" />
-      <div id="posterPreview" style="margin-top:10px; text-align:center;">
-        <img id="posterImg" src="" alt="海报" style="max-width:100%; display:none;" />
+      <input type="file" accept="image/*" id="posterFile" onchange="previewPoster(event)" />
+      <div style="text-align:center; margin-top:10px;">
+        <img id="posterImg" style="max-width:100%; display:none;" />
       </div>
     </div>
 
-    <!-- 控制按钮 -->
-    <div class="controls">
-      <button id="generateBtn" onclick="generateReport()">生成成果展示</button>
-      <button id="printBtn" class="secondary" onclick="printReport()">打印 / 导出为 PDF</button>
-    </div>
+    <button onclick="generateReport()">生成成果展示</button>
 
-    <!-- 成果展示区域（隐藏） -->
-    <div id="result" style="display:none; margin-top:30px;">
-      <h2>成果展示</h2>
-      <div style="background:white; padding:20px; border:1px solid #ddd;">
-        <p><strong>姓名：</strong> <span id="result-name"></span></p>
-        <p><strong>班级：</strong> <span id="result-class"></span></p>
-        <p><strong>实训时长：</strong> <span id="result-duration"></span></p>
-        <p><strong>平台：</strong> <span id="result-platform"></span></p>
-        <p><strong>站点：</strong> <span id="result-site"></span></p>
-        <p><strong>品类：</strong> <span id="result-category"></span></p>
-        <p><strong>上架产品数量：</strong> <span id="result-count"></span></p>
-        <p><strong>上架产品标题展示：</strong> <br><span id="result-title" style="font-family:monospace;"></span></p>
-        <div style="display:flex; gap:20px; margin:20px 0; flex-wrap:wrap;">
-          <img src="" alt="产品1" style="max-width:200px; border:1px solid #ddd;" id="result-img1" />
-          <img src="" alt="产品2" style="max-width:200px; border:1px solid #ddd;" id="result-img2" />
-          <img src="" alt="产品3" style="max-width:200px; border:1px solid #ddd;" id="result-img3" />
-        </div>
-        <p><strong>店铺实训期间数据统计：</strong></p>
-        <div style="display:flex; justify-content:space-around; margin:20px 0; flex-wrap:wrap;">
-          <div><p>浏览量</p><p id="result-views"></p></div>
-          <div><p>点击数</p><p id="result-clicks"></p></div>
-          <div><p>访客数</p><p id="result-visitors"></p></div>
-        </div>
-        <p><strong>店铺近7天数据展示：</strong></p>
-        <img id="result-chart" src="" alt="数据图表" style="max-width:100%;" />
-        <div style="text-align:center; margin-top:20px;">
-          <img id="result-poster" src="" alt="海报" style="max-width:100%;" />
-        </div>
-        <div class="footer">*乌龙学工生成</div>
+    <!-- 结果展示区 -->
+    <div id="result">
+      <h2>电商实训成果展示</h2>
+      <p><strong>姓名：</strong> <span id="r-name"></span></p>
+      <p><strong>班级：</strong> <span id="r-class"></span></p>
+      <p><strong>实训时长：</strong> <span id="r-duration"></span></p>
+      <p><strong>平台：</strong> <span id="r-platform"></span></p>
+      <p><strong>站点：</strong> <span id="r-site"></span></p>
+      <p><strong>品类：</strong> <span id="r-category"></span></p>
+      <p><strong>上架产品数量：</strong> <span id="r-count"></span></p>
+      <p><strong>上架产品标题展示：</strong><br><span id="r-title"></span></p>
+
+      <h3>优秀架上产品展示：</h3>
+      <div class="image-container">
+        <img id="r-img1" style="max-width:200px; border:1px solid #ddd;" />
+        <img id="r-img2" style="max-width:200px; border:1px solid #ddd;" />
+        <img id="r-img3" style="max-width:200px; border:1px solid #ddd;" />
       </div>
+
+      <h3>海报展示：</h3>
+      <div style="text-align:center;">
+        <img id="r-poster" style="max-width:100%;" />
+      </div>
+
+      <div class="footer">*乌龙学工生成</div>
     </div>
   </div>
 
   <script>
-    function previewImage(input, imgId) {
-      const img = document.getElementById(imgId);
-      if (input.files && input.files[0]) {
+    function previewImage(event, imgId) {
+      const file = event.target.files[0];
+      if (file) {
         const reader = new FileReader();
         reader.onload = function(e) {
-          img.src = e.target.result;
-          img.style.display = "block";
+          document.getElementById(imgId).src = e.target.result;
+          document.getElementById(imgId).style.display = 'block';
         };
-        reader.readAsDataURL(input.files[0]);
+        reader.readAsDataURL(file);
       }
     }
 
-    function previewPoster(input) {
-      const img = document.getElementById("posterImg");
-      if (input.files && input.files[0]) {
+    function previewPoster(event) {
+      const file = event.target.files[0];
+      if (file) {
         const reader = new FileReader();
         reader.onload = function(e) {
-          img.src = e.target.result;
-          img.style.display = "block";
+          document.getElementById('posterImg').src = e.target.result;
+          document.getElementById('posterImg').style.display = 'block';
         };
-        reader.readAsDataURL(input.files[0]);
+        reader.readAsDataURL(file);
       }
     }
 
     function generateReport() {
-      // 获取输入值
-      document.getElementById("result-name").textContent = document.getElementById("name").value;
-      document.getElementById("result-class").textContent = document.getElementById("class").value;
-      document.getElementById("result-duration").textContent = document.getElementById("duration").value;
-      document.getElementById("result-platform").textContent = document.getElementById("platform").value;
-      document.getElementById("result-site").textContent = document.getElementById("site").value;
-      document.getElementById("result-category").textContent = document.getElementById("category").value;
-      document.getElementById("result-count").textContent = document.getElementById("productCount").value;
-      document.getElementById("result-title").textContent = document.getElementById("productTitle").value;
+      // 填充文字
+      document.getElementById('r-name').textContent = document.getElementById('name').value || '未填写';
+      document.getElementById('r-class').textContent = document.getElementById('class').value || '未填写';
+      document.getElementById('r-duration').textContent = document.getElementById('duration').value || '未填写';
+      document.getElementById('r-platform').textContent = document.getElementById('platform').value;
+      document.getElementById('r-site').textContent = document.getElementById('site').value || '未填写';
+      document.getElementById('r-category').textContent = document.getElementById('category').value || '未填写';
+      document.getElementById('r-count').textContent = document.getElementById('productCount').value || '0';
+      document.getElementById('r-title').textContent = document.getElementById('productTitle').value || '无';
 
-      // 数据统计
-      document.getElementById("result-views").textContent = document.getElementById("views").textContent;
-      document.getElementById("result-clicks").textContent = document.getElementById("clicks").textContent;
-      document.getElementById("result-visitors").textContent = document.getElementById("visitors").textContent;
-
-      // 图片预览
-      document.getElementById("result-img1").src = document.getElementById("img1").src || "";
-      document.getElementById("result-img2").src = document.getElementById("img2").src || "";
-      document.getElementById("result-img3").src = document.getElementById("img3").src || "";
-
-      // 图表和海报
-      document.getElementById("result-chart").src = document.getElementById("chartImage").src;
-      document.getElementById("result-poster").src = document.getElementById("posterImg").src;
+      // 填充图片
+      document.getElementById('r-img1').src = document.getElementById('img1').src || '';
+      document.getElementById('r-img2').src = document.getElementById('img2').src || '';
+      document.getElementById('r-img3').src = document.getElementById('img3').src || '';
+      document.getElementById('r-poster').src = document.getElementById('posterImg').src || '';
 
       // 显示结果
-      document.getElementById("result").style.display = "block";
-    }
-
-    function printReport() {
-      // Ensure result is up-to-date and visible before printing
-      generateReport();
-      // Wait briefly for DOM updates and images to render, then call print
-      setTimeout(function() {
-        window.print();
-      }, 300);
+      document.getElementById('result').style.display = 'block';
     }
   </script>
 </body>
